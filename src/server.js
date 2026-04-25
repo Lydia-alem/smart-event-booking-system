@@ -15,10 +15,11 @@ const adminRoutes = require('./routes/admin.routes');
 const errorHandler = require('./middleware/errorHandler');
 const swaggerDocs = require('./utils/swagger');
 
+//creating the app
 const app = express();
 
-// Middleware
-app.use(cors());
+// Global Middleware
+app.use(cors());//alows frontend requests 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

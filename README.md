@@ -36,19 +36,12 @@ Every resource is identified by a unique URI:
 
 **Principle**: URLs should identify resources, not actions.
 
-❌ BAD: `/api/v1/getEvents` or `/api/v1/deleteEvent?id=5`
-✅ GOOD: `GET /api/v1/events/5` and `DELETE /api/v1/events/5`
+ BAD: `/api/v1/getEvents` or `/api/v1/deleteEvent?id=5`
+ GOOD: `GET /api/v1/events/5` and `DELETE /api/v1/events/5`
 
 #### 2. HTTP Verbs (CRUD Operations)
 
-Each HTTP method has specific semantics:
-
-| Verb   | Operation | Safe? | Idempotent? | Status Code |
-|--------|-----------|-------|-------------|-------------|
-| GET    | Read      | ✅    | ✅          | 200         |
-| POST   | Create    | ❌    | ❌          | 201         |
-| PUT    | Update    | ❌    | ✅          | 200         |
-| DELETE | Delete    | ❌    | ✅          | 200/204     |
+Each HTTP method has specific semantic.
 
 **Examples from this project:**
 
@@ -146,12 +139,6 @@ Resources are represented in JSON format:
 
 This project implements **Level 2 (HTTP Verbs + Status Codes)**:
 
-| Level | Description | Our Implementation |
-|-------|-------------|-------------------|
-| Level 0 | Single endpoint, XML payloads | ❌ |
-| Level 1 | Multiple resources | ✅ |
-| Level 2 | HTTP verbs + proper status codes | ✅ |
-| Level 3 | HATEOAS (hypermedia links) | Partial |
 
 ---
 
@@ -268,7 +255,7 @@ smart-event-booking-system/
 
 Based on the course PDF, your homework should demonstrate:
 
-### 1. REST Architecture Implementation ✅
+### 1. REST Architecture Implementation 
 
 **What to show:**
 - Resource-based URLs (not `/getUsers`, use `GET /users`)
@@ -277,28 +264,28 @@ Based on the course PDF, your homework should demonstrate:
 
 **Code example:**
 ```javascript
-// ✅ CORRECT - RESTful
+// CORRECT - RESTful
 router.get('/events', eventController.getEvents);
 router.post('/events', eventController.createEvent);
 router.put('/events/:id', eventController.updateEvent);
 router.delete('/events/:id', eventController.deleteEvent);
 
-// ❌ WRONG - Not RESTful
+// WRONG - Not RESTful
 router.get('/getEvents', eventController.getEvents);
 router.get('/deleteEvent', eventController.deleteEvent);
 ```
 
 ### 2. Richardson Maturity Model ✅
 
-**Level 0 (❌):** Don't use single endpoint with XML/JSON action payloads
+**Level 0:** Don't use single endpoint with XML/JSON action payloads
 
-**Level 1 (✅):** Use multiple resources
+**Level 1:** Use multiple resources
 ```javascript
 router.get('/events', ...);
 router.get('/users', ...);
 ```
 
-**Level 2 (✅):** Use HTTP verbs properly
+**Level 2:** Use HTTP verbs properly
 ```javascript
 // POST creates, GET reads, PUT updates, DELETE removes
 // Return appropriate status codes: 200, 201, 400, 401, 403, 404
@@ -306,7 +293,7 @@ router.get('/users', ...);
 
 **Level 3 (Optional):** HATEOAS - add links in responses
 
-### 3. Security Best Practices ✅
+### 3. Security Best Practices 
 
 **Authentication:**
 ```javascript
@@ -328,7 +315,7 @@ const { body, validationResult } = require('express-validator');
 body('email').isEmail().withMessage('Invalid email');
 ```
 
-### 4. Documentation ✅
+### 4. Documentation 
 
 **Use Swagger:**
 - Access at: `http://localhost:3000/api-docs`
@@ -345,7 +332,7 @@ body('email').isEmail().withMessage('Invalid email');
 router.get('/', eventController.getEvents);
 ```
 
-### 5. Error Handling ✅
+### 5. Error Handling 
 
 **Proper status codes:**
 ```javascript
@@ -362,7 +349,7 @@ res.status(404).json({ success: false, message: 'Not found' });
 res.status(500).json({ success: false, message: 'Server error' });
 ```
 
-### 6. Testing ✅
+### 6. Testing 
 
 **Tools mentioned in course:**
 - Postman for API testing
@@ -443,9 +430,9 @@ POST http://localhost:3000/api/v1/auth/register
 Content-Type: application/json
 
 {
-  "firstName": "John",
-  "lastName": "Doe",
-  "email": "john@example.com",
+  "firstName": "Maya",
+  "lastName": "Kraimia",
+  "email": "KraimiaMaya@example.com",
   "password": "password123"
 }
 ```
@@ -456,7 +443,7 @@ POST http://localhost:3000/api/v1/auth/login
 Content-Type: application/json
 
 {
-  "email": "john@example.com",
+  "email": "Maya@example.com",
   "password": "password123"
 }
 ```

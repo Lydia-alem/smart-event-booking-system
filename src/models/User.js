@@ -1,7 +1,7 @@
 /**
  * User Model
  * Represents a user in the Smart Event Booking System
- *
+ 
  * REST PRINCIPLES APPLIED:
  * - Resource-based: Each document is a resource identified by _id
  * - Proper HTTP semantics: Supported through routes using GET, POST, PUT, DELETE
@@ -104,7 +104,7 @@ const userSchema = new mongoose.Schema({
 });
 
 // Index for faster queries
-userSchema.index({ email: 1 });
+userSchema.index({ email: 1 });//ascending order 
 userSchema.index({ role: 1 });
 userSchema.index({ status: 1 });
 
@@ -113,8 +113,8 @@ userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();
 
   try {
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
+    const salt = await bcrypt.genSalt(10);//generate random salt
+    this.password = await bcrypt.hash(this.password, salt);//apply the salt 
     next();
   } catch (error) {
     next(error);
