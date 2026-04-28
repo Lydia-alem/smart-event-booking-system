@@ -12,7 +12,7 @@ const reviewRoutes = require('./routes/review.routes');
 const adminRoutes = require('./routes/admin.routes');
 
 // Import middleware
-const errorHandler = require('./middleware/errorHandler');
+const { errorHandler } = require('./middleware/errorHandler');
 const swaggerDocs = require('./utils/swagger');
 
 //creating the app

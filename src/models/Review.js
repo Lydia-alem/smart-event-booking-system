@@ -7,7 +7,7 @@
  * - HTTP verbs: POST (create), GET (read), PUT (update), DELETE (remove own review)
  * - Proper status codes: 201 (Created), 200 (OK), 403 (Forbidden), 404 (Not Found)
  */
-const mongoose = require('mongoose';
+const mongoose = require('mongoose');
 
 const reviewSchema = new mongoose.Schema({
   user: {
@@ -79,13 +79,13 @@ reviewSchema.index({ createdAt: -1 });
 reviewSchema.index({ user: 1, event: 1 }, { unique: true });
 
 // Update timestamp on save
-reviewSchema.pre('save', function(next) {
+reviewSchema.pre('save', function (next) {
   this.updatedAt = Date.now();
   next();
 });
 
 // Static method to calculate average rating for an event
-reviewSchema.statics.calculateEventRating = async function(eventId) {
+reviewSchema.statics.calculateEventRating = async function (eventId) {
   const stats = await this.aggregate([
     { $match: { event: eventId, isApproved: true } },
     {
@@ -110,7 +110,7 @@ reviewSchema.statics.calculateEventRating = async function(eventId) {
 };
 
 // Static method to get reviews for an event
-reviewSchema.statics.getEventReviews = function(eventId, options = {}) {
+reviewSchema.statics.getEventReviews = function (eventId, options = {}) {
   const { limit = 20, page = 1, sort = '-createdAt' } = options;
   const skip = (page - 1) * limit;
 
@@ -123,7 +123,7 @@ reviewSchema.statics.getEventReviews = function(eventId, options = {}) {
 };
 
 // Method to check if user attended the event
-reviewSchema.methods.checkAttendance = async function() {
+reviewSchema.methods.checkAttendance = async function () {
   const Booking = mongoose.model('Booking');
   const booking = await Booking.findOne({
     user: this.user,
@@ -135,7 +135,7 @@ reviewSchema.methods.checkAttendance = async function() {
 };
 
 // Transform output
-reviewSchema.methods.toJSON = function() {
+reviewSchema.methods.toJSON = function () {
   const obj = this.toObject();
   delete obj.__v;
   delete obj.voters;
