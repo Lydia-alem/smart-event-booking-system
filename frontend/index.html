@@ -29,6 +29,16 @@
     <main class="container">
         <section class="events-section">
             <h2>Upcoming Events</h2>
+            <div class="filters-container" style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+                <input type="text" id="search-input" placeholder="Search events..." style="flex: 1;">
+                <select id="category-filter" style="background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(255,255,255,0.1); padding: 0.875rem 1rem; border-radius: 8px; color: white; outline: none; transition: border-color 0.3s ease;">
+                    <option value="">All Categories</option>
+                    <option value="conference">Conference</option>
+                    <option value="workshop">Workshop</option>
+                    <option value="concert">Concert</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
             <div id="events-grid" class="events-grid">
                 <!-- Event cards will be dynamically injected here -->
             </div>
@@ -46,6 +56,9 @@
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
             <p id="auth-error" class="error-text hidden"></p>
+            <div style="margin-top: 1rem; text-align: center;">
+                <a href="#" id="forgot-password-link" style="color: var(--primary-color); text-decoration: none; font-size: 0.9rem;">Forgot Password?</a>
+            </div>
         </div>
     </div>
 
@@ -69,6 +82,43 @@
                 <button type="submit" class="btn btn-primary">Register</button>
             </form>
             <p id="register-error" class="error-text hidden"></p>
+        </div>
+    </div>
+
+    <!-- Password Recovery Modal -->
+    <div id="recovery-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal" id="close-recovery">&times;</span>
+            <h2>Recover Password</h2>
+            <form id="recovery-form">
+                <input type="email" id="recovery-email" placeholder="Enter your email" required autocomplete="email">
+                <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">Send Reset Link</button>
+            </form>
+            <p id="recovery-message" class="error-text hidden"></p>
+        </div>
+    </div>
+
+    <!-- Event Details Modal -->
+    <div id="event-details-modal" class="modal hidden">
+        <div class="modal-content" style="max-width: 600px;">
+            <span class="close-modal" id="close-event-details">&times;</span>
+            <h2 id="detail-title" style="color: var(--primary-color); margin-bottom: 0.5rem;">Event Title</h2>
+            <div style="display: flex; gap: 1rem; margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.9rem;">
+                <span id="detail-date"></span>
+                <span id="detail-status" class="status-badge"></span>
+            </div>
+            <p id="detail-desc" style="margin-bottom: 1.5rem; line-height: 1.6;"></p>
+            <div style="margin-bottom: 1.5rem;">
+                <strong>Category:</strong> <span id="detail-category"></span><br>
+                <strong>Venue:</strong> <span id="detail-venue"></span><br>
+                <strong>Price:</strong> <span id="detail-price" style="color: #34d399; font-weight: bold;"></span>
+            </div>
+            
+            <div id="detail-reviews" style="margin-bottom: 1.5rem;">
+                <!-- Reviews will go here -->
+            </div>
+
+            <button class="btn btn-primary" id="btn-open-booking" style="width: 100%;">Book Tickets Now</button>
         </div>
     </div>
 

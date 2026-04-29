@@ -149,8 +149,8 @@ eventSchema.index({ organizer: 1 });
 eventSchema.index({ startDate: 1 });
 eventSchema.index({ price: 1 });
 
-// Update available tickets on save
-eventSchema.pre('save', function(next) {
+// Update available tickets before validation
+eventSchema.pre('validate', function(next) {
   if (this.isModified('capacity') || this.isNew) {
     this.availableTickets = this.capacity;
   }

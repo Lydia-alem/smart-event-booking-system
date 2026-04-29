@@ -147,7 +147,7 @@ const createEvent = asyncHandler(async (req, res) => {
     currency,
     image,
     organizer: req.userId,
-    status: req.user.role === USER_ROLES.ADMIN ? 'approved' : 'pending'
+    status: 'approved' // Automatically approve so it shows up on the homepage
   });
 
   await event.populate('organizer', 'firstName lastName organizationName');
