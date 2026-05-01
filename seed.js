@@ -33,6 +33,15 @@ const seedDB = async () => {
             organizationName: 'VisionX Events Co'
         });
 
+        const admin1 = await User.create({
+            firstName: 'Super',
+            lastName: 'Admin',
+            email: 'admin@example.com',
+            password: 'password123',
+            role: USER_ROLES.ADMIN,
+            status: USER_STATUS.ACTIVE
+        });
+
         console.log('Creating events...');
         const now = new Date();
         const nextWeek = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
@@ -94,6 +103,7 @@ const seedDB = async () => {
         console.log('\n--- Test Credentials ---');
         console.log('User Login: user@example.com / password123');
         console.log('Organizer Login: organizer@example.com / password123');
+        console.log('Admin Login: admin@example.com / password123');
         console.log('------------------------\n');
 
         process.exit(0);

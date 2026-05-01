@@ -106,21 +106,38 @@ const emailTemplates = {
  */
 const sendEmail = async (to, subject, html) => {
   try {
-    // Skip if no email configured (development mode)
+    let currentTransporter = transporter;
+    
+    // If no email configured, use Ethereal for testing
     if (!process.env.SMTP_USER) {
-      console.log('Email not configured. Skipping email to:', to);
-      console.log('Subject:', subject);
-      return { success: true, message: 'Email skipped (not configured)' };
+      console.log('No SMTP configuration found in .env. Generating test Ethereal account...');
+      const testAccount = await nodemailer.createTestAccount();
+      
+      currentTransporter = nodemailer.createTransport({
+        host: 'smtp.ethereal.email',
+        port: 587,
+        secure: false,
+        auth: {
+          user: testAccount.user,
+          pass: testAccount.pass
+        }
+      });
     }
 
-    const info = await transporter.sendMail({
-      from: `"Smart Event Booking" <${process.env.SMTP_USER}>`,
+    const info = await currentTransporter.sendMail({
+      from: `"Smart Event Booking" <${process.env.SMTP_USER || 'test@ethereal.email'}>`,
       to,
       subject,
       html
     });
 
-    console.log('Email sent:', info.messageId);
+    console.log('Email sent successfully:', info.messageId);
+    
+    // Log the preview URL for Ethereal
+    if (!process.env.SMTP_USER) {
+        console.log('👀 Preview Email URL: %s', nodemailer.getTestMessageUrl(info));
+    }
+    
     return { success: true, messageId: info.messageId };
   } catch (error) {
     console.error('Email sending failed:', error);

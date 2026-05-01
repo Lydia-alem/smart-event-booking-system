@@ -14,7 +14,7 @@ const contentLoading = document.getElementById('content-loading');
 const profileInfo = document.getElementById('profile-info');
 
 // Views
-const views = ['view-profile', 'view-bookings', 'view-my-events', 'view-create-event', 'view-admin-stats', 'view-admin-events', 'view-admin-users'];
+const views = ['view-profile', 'view-bookings', 'view-my-events', 'view-create-event', 'view-admin-stats', 'view-admin-events', 'view-admin-users', 'view-admin-reviews'];
 
 async function initDashboard() {
     try {
@@ -50,6 +50,7 @@ function renderSidebar() {
         linksHTML += `<a onclick="loadAdminStats()">Analytics</a>`;
         linksHTML += `<a onclick="loadAdminEvents()">Approval Queue</a>`;
         linksHTML += `<a onclick="loadAdminUsers()">User Management</a>`;
+        linksHTML += `<a onclick="loadAdminReviews()">Review Moderation</a>`;
     }
 
     sidebarLinks.innerHTML = linksHTML;
@@ -456,3 +457,47 @@ document.getElementById('review-form').addEventListener('submit', async (e) => {
         btn.disabled = false;
     }
 });
+
+// Admin Review Moderation
+window.loadAdminReviews = async () => {
+    showView('view-admin-reviews');
+    const tbody = document.getElementById('admin-reviews-table-body');
+    tbody.innerHTML = '<tr><td colspan="6">Loading...</td></tr>';
+    try {
+        const res = await fetch(`${API_URL}/admin/reviews`, { headers: { 'Authorization': `Bearer ${token}` } });
+        const result = await res.json();
+        const reviews = result.data?.reviews || [];
+        if(reviews.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6">No reviews found.</td></tr>';
+            return;
+        }
+        tbody.innerHTML = reviews.map(r => `
+            <tr>
+                <td>${r.user?.firstName || 'Unknown'} ${r.user?.lastName || ''}</td>
+                <td>${r.event?.title || 'Unknown Event'}</td>
+                <td>${r.rating} ★</td>
+                <td>${r.comment || 'No comment'}</td>
+                <td><span class="status-badge status-${r.status}">${r.status}</span></td>
+                <td>
+                    ${r.status === 'flagged' ? `<button class="btn btn-outline" style="font-size:0.8rem; padding: 0.25rem 0.5rem; color:#10b981; border-color:#10b981;" onclick="adminApproveReview('${r._id}')">Approve</button>` : ''}
+                    <button class="btn btn-outline" style="font-size:0.8rem; padding: 0.25rem 0.5rem; color:#ef4444; border-color:#ef4444; margin-left: 0.5rem;" onclick="adminDeleteReview('${r._id}')">Delete</button>
+                </td>
+            </tr>
+        `).join('');
+    } catch(e) { tbody.innerHTML = '<tr><td colspan="6">Error loading reviews.</td></tr>'; }
+};
+
+window.adminApproveReview = async (id) => {
+    try {
+        await fetch(`${API_URL}/admin/reviews/${id}/approve`, { method: 'PUT', headers: { 'Authorization': `Bearer ${token}` } });
+        loadAdminReviews();
+    } catch(e) { alert('Failed'); }
+};
+
+window.adminDeleteReview = async (id) => {
+    if(!confirm('Are you sure you want to delete this review?')) return;
+    try {
+        await fetch(`${API_URL}/admin/reviews/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+        loadAdminReviews();
+    } catch(e) { alert('Failed'); }
+};
